@@ -40,6 +40,10 @@ import com.minibusfare.calculator.ui.theme.VillageOrangePrimaryLight
 fun RouteSelector(
     selectedRoute: RouteType,
     onRouteSelected: (RouteType) -> Unit,
+    cityAdultPrice: Int,
+    cityChildPrice: Int,
+    villageAdultPrice: Int,
+    villageChildPrice: Int,
     modifier: Modifier = Modifier,
     cardVerticalPadding: Dp = 6.dp
 ) {
@@ -51,6 +55,9 @@ fun RouteSelector(
     ) {
         RouteType.entries.forEach { route ->
             val isSelected = route == selectedRoute
+
+            val adultPrice = if (route == RouteType.CITY) cityAdultPrice else villageAdultPrice
+            val childPrice = if (route == RouteType.CITY) cityChildPrice else villageChildPrice
 
             val routePrimary = when (route) {
                 RouteType.CITY -> if (darkTheme) CityBluePrimaryDark else CityBluePrimaryLight
@@ -89,7 +96,7 @@ fun RouteSelector(
                         color = if (isSelected) contentColor else routePrimary
                     )
                     Text(
-                        text = stringResource(R.string.route_price_format, route.adultPrice, route.childPrice),
+                        text = stringResource(R.string.route_price_format, adultPrice, childPrice),
                         style = MaterialTheme.typography.bodySmall,
                         fontSize = 11.sp,
                         color = contentColor.copy(alpha = 0.85f)
@@ -107,6 +114,10 @@ fun RouteSelectorCityPreview() {
         RouteSelector(
             selectedRoute = RouteType.CITY,
             onRouteSelected = {},
+            cityAdultPrice = 15,
+            cityChildPrice = 8,
+            villageAdultPrice = 28,
+            villageChildPrice = 15,
             modifier = Modifier.padding(12.dp)
         )
     }
@@ -119,6 +130,10 @@ fun RouteSelectorVillagePreview() {
         RouteSelector(
             selectedRoute = RouteType.VILLAGE,
             onRouteSelected = {},
+            cityAdultPrice = 15,
+            cityChildPrice = 8,
+            villageAdultPrice = 28,
+            villageChildPrice = 15,
             modifier = Modifier.padding(12.dp)
         )
     }

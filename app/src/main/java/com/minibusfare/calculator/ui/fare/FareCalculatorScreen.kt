@@ -114,6 +114,10 @@ fun FareCalculatorContent(
                     RouteSelector(
                         selectedRoute = state.selectedRoute,
                         onRouteSelected = { onAction(FareCalculatorAction.OnRouteSelected(it)) },
+                        cityAdultPrice = state.cityAdultPrice,
+                        cityChildPrice = state.cityChildPrice,
+                        villageAdultPrice = state.villageAdultPrice,
+                        villageChildPrice = state.villageChildPrice,
                         cardVerticalPadding = if (isCompact) 4.dp else 6.dp
                     )
 
