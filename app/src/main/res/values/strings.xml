@@ -17,7 +17,7 @@
     <string name="title_change">РЕШТА</string>
     <string name="title_no_change">БЕЗ РЕШТИ</string>
     <string name="value_no_change_format">Рівно %1$d ₴</string>
-    <string name="title_insufficient">НЕ ХОПЛЮЄ</string>
+    <string name="title_insufficient">НЕ ВИСТАЧАЄ</string>
     <string name="hint_tap_to_reset">• натисніть для скидання •</string>
     <string name="label_denominations">Купюри для решти:</string>
     <string name="currency_symbol">₴</string>
