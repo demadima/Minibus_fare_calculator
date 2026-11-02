@@ -13,7 +13,7 @@ data class FareCalculatorState(
     val isPaidSufficient: Boolean = false,
     val remainingToPay: Int = 15,
     val changeBreakdown: Map<Int, Int> = emptyMap(),
-    val presetAmounts: List<Int> = listOf(20, 40, 50, 60, 70, 80, 90, 100, 120, 140, 150, 160, 200, 500, 1000, 2000),
+    val presetAmounts: List<Int> = listOf(180, 40, 50, 60, 70, 80, 90, 100, 120, 140, 150, 160, 200, 500, 1000, 2000),
     val cityAdultPrice: Int = 15,
     val cityChildPrice: Int = 8,
     val villageAdultPrice: Int = 28,

@@ -22,6 +22,6 @@ data class FareSettings(
         const val DEFAULT_CITY_CHILD_PRICE = 8
         const val DEFAULT_VILLAGE_ADULT_PRICE = 28
         const val DEFAULT_VILLAGE_CHILD_PRICE = 15
-        val DEFAULT_PRESETS = listOf(20, 40, 50, 60, 70, 80, 90, 100, 120, 140, 150, 160, 200, 500, 1000, 2000)
+        val DEFAULT_PRESETS = listOf(180, 40, 50, 60, 70, 80, 90, 100, 120, 140, 150, 160, 200, 500, 1000, 2000)
     }
 }
