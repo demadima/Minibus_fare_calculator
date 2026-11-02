@@ -40,10 +40,10 @@ import com.minibusfare.calculator.ui.theme.VillageOrangePrimaryLight
 fun RouteSelector(
     selectedRoute: RouteType,
     onRouteSelected: (RouteType) -> Unit,
-    cityAdultPrice: Int,
-    cityChildPrice: Int,
-    villageAdultPrice: Int,
-    villageChildPrice: Int,
+    cityAdultPrice: Int = 15,
+    cityChildPrice: Int = 8,
+    villageAdultPrice: Int = 28,
+    villageChildPrice: Int = 15,
     modifier: Modifier = Modifier,
     cardVerticalPadding: Dp = 6.dp
 ) {
@@ -114,10 +114,6 @@ fun RouteSelectorCityPreview() {
         RouteSelector(
             selectedRoute = RouteType.CITY,
             onRouteSelected = {},
-            cityAdultPrice = 15,
-            cityChildPrice = 8,
-            villageAdultPrice = 28,
-            villageChildPrice = 15,
             modifier = Modifier.padding(12.dp)
         )
     }
@@ -130,10 +126,6 @@ fun RouteSelectorVillagePreview() {
         RouteSelector(
             selectedRoute = RouteType.VILLAGE,
             onRouteSelected = {},
-            cityAdultPrice = 15,
-            cityChildPrice = 8,
-            villageAdultPrice = 28,
-            villageChildPrice = 15,
             modifier = Modifier.padding(12.dp)
         )
     }
