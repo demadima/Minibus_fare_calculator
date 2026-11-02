@@ -1,21 +1,53 @@
 package com.minibusfare.calculator
 
+import com.minibusfare.calculator.domain.model.FareSettings
 import com.minibusfare.calculator.domain.model.RouteType
+import com.minibusfare.calculator.domain.repository.SettingsRepository
 import com.minibusfare.calculator.ui.fare.FareCalculatorViewModel
 import com.minibusfare.calculator.ui.fare.mvi.FareCalculatorAction
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.setMain
+import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 
+class FakeSettingsRepository : SettingsRepository {
+    val settingsFlow = MutableStateFlow(FareSettings())
+    override val fareSettingsFlow: Flow<FareSettings> = settingsFlow
+    override suspend fun saveFareSettings(settings: FareSettings) {
+        settingsFlow.value = settings
+    }
+    override suspend fun resetToDefaults() {
+        settingsFlow.value = FareSettings()
+    }
+}
+
+@OptIn(ExperimentalCoroutinesApi::class)
 class FareCalculatorViewModelTest {
 
+    private val testDispatcher = StandardTestDispatcher()
+    private lateinit var fakeRepository: FakeSettingsRepository
     private lateinit var viewModel: FareCalculatorViewModel
 
     @Before
     fun setUp() {
-        viewModel = FareCalculatorViewModel()
+        Dispatchers.setMain(testDispatcher)
+        fakeRepository = FakeSettingsRepository()
+        viewModel = FareCalculatorViewModel(fakeRepository)
+        testDispatcher.scheduler.advanceUntilIdle()
+    }
+
+    @After
+    fun tearDown() {
+        Dispatchers.resetMain()
     }
 
     @Test

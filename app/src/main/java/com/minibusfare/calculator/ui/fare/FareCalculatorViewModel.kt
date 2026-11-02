@@ -1,7 +1,10 @@
 package com.minibusfare.calculator.ui.fare
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.minibusfare.calculator.domain.model.FareSettings
 import com.minibusfare.calculator.domain.model.RouteType
+import com.minibusfare.calculator.domain.repository.SettingsRepository
 import com.minibusfare.calculator.ui.fare.mvi.FareCalculatorAction
 import com.minibusfare.calculator.ui.fare.mvi.FareCalculatorEvent
 import com.minibusfare.calculator.ui.fare.mvi.FareCalculatorState
@@ -11,21 +14,36 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
-class FareCalculatorViewModel : ViewModel() {
+class FareCalculatorViewModel(
+    private val settingsRepository: SettingsRepository
+) : ViewModel() {
+
+    private var currentSettings = FareSettings()
 
     private val _state = MutableStateFlow(
         createCalculatedState(
             selectedRoute = RouteType.CITY,
             adultCount = 1,
             childCount = 0,
-            amountPaidInput = ""
+            amountPaidInput = "",
+            settings = currentSettings
         )
     )
     val state: StateFlow<FareCalculatorState> = _state.asStateFlow()
 
     private val _event = Channel<FareCalculatorEvent>(Channel.BUFFERED)
     val event = _event.receiveAsFlow()
+
+    init {
+        viewModelScope.launch {
+            settingsRepository.fareSettingsFlow.collect { settings ->
+                currentSettings = settings
+                updateState { it }
+            }
+        }
+    }
 
     fun onAction(action: FareCalculatorAction) {
         when (action) {
@@ -53,7 +71,8 @@ class FareCalculatorViewModel : ViewModel() {
                     selectedRoute = _state.value.selectedRoute,
                     adultCount = 1,
                     childCount = 0,
-                    amountPaidInput = ""
+                    amountPaidInput = "",
+                    settings = currentSettings
                 )
             }
         }
@@ -66,7 +85,8 @@ class FareCalculatorViewModel : ViewModel() {
                 selectedRoute = updated.selectedRoute,
                 adultCount = updated.adultCount,
                 childCount = updated.childCount,
-                amountPaidInput = updated.amountPaidInput
+                amountPaidInput = updated.amountPaidInput,
+                settings = currentSettings
             )
         }
     }
@@ -75,9 +95,12 @@ class FareCalculatorViewModel : ViewModel() {
         selectedRoute: RouteType,
         adultCount: Int,
         childCount: Int,
-        amountPaidInput: String
+        amountPaidInput: String,
+        settings: FareSettings
     ): FareCalculatorState {
-        val totalFare = (adultCount * selectedRoute.adultPrice) + (childCount * selectedRoute.childPrice)
+        val adultPrice = settings.getAdultPrice(selectedRoute)
+        val childPrice = settings.getChildPrice(selectedRoute)
+        val totalFare = (adultCount * adultPrice) + (childCount * childPrice)
         val amountPaid = amountPaidInput.toIntOrNull() ?: 0
         val change = amountPaid - totalFare
         val isPaidSufficient = amountPaidInput.isNotEmpty() && (amountPaid >= totalFare)
@@ -94,7 +117,12 @@ class FareCalculatorViewModel : ViewModel() {
             change = change,
             isPaidSufficient = isPaidSufficient,
             remainingToPay = remainingToPay,
-            changeBreakdown = breakdown
+            changeBreakdown = breakdown,
+            presetAmounts = settings.presetAmounts,
+            cityAdultPrice = settings.cityAdultPrice,
+            cityChildPrice = settings.cityChildPrice,
+            villageAdultPrice = settings.villageAdultPrice,
+            villageChildPrice = settings.villageChildPrice
         )
     }
 

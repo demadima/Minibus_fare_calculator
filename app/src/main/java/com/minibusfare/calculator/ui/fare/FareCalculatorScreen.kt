@@ -10,9 +10,16 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -22,7 +29,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.minibusfare.calculator.R
 import com.minibusfare.calculator.domain.model.RouteType
 import com.minibusfare.calculator.ui.fare.components.ChangeSummaryCard
@@ -33,29 +39,55 @@ import com.minibusfare.calculator.ui.fare.components.RouteSelector
 import com.minibusfare.calculator.ui.fare.mvi.FareCalculatorAction
 import com.minibusfare.calculator.ui.fare.mvi.FareCalculatorState
 import com.minibusfare.calculator.ui.theme.MinibusFareCalculatorTheme
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun FareCalculatorScreen(
-    viewModel: FareCalculatorViewModel = viewModel(),
-    modifier: Modifier = Modifier
+    onNavigateToSettings: () -> Unit,
+    modifier: Modifier = Modifier,
+    viewModel: FareCalculatorViewModel = koinViewModel()
 ) {
     val state by viewModel.state.collectAsState()
 
     FareCalculatorContent(
         state = state,
         onAction = viewModel::onAction,
+        onNavigateToSettings = onNavigateToSettings,
         modifier = modifier
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FareCalculatorContent(
     state: FareCalculatorState,
     onAction: (FareCalculatorAction) -> Unit,
+    onNavigateToSettings: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     MinibusFareCalculatorTheme(routeType = state.selectedRoute) {
         Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = {
+                        Text(
+                            text = stringResource(R.string.app_name),
+                            fontWeight = FontWeight.Bold
+                        )
+                    },
+                    actions = {
+                        IconButton(onClick = onNavigateToSettings) {
+                            Icon(
+                                imageVector = Icons.Default.Settings,
+                                contentDescription = stringResource(R.string.title_settings)
+                            )
+                        }
+                    },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.surface
+                    )
+                )
+            },
             modifier = modifier
         ) { innerPadding ->
             BoxWithConstraints(
@@ -63,7 +95,7 @@ fun FareCalculatorContent(
                     .fillMaxSize()
                     .padding(innerPadding)
                     .imePadding()
-                    .padding(horizontal = 10.dp, vertical = 6.dp)
+                    .padding(horizontal = 10.dp, vertical = 4.dp)
             ) {
                 val screenHeight = maxHeight
                 val isCompact = screenHeight < 680.dp
@@ -88,7 +120,7 @@ fun FareCalculatorContent(
                     // 2. Кол-во пассажиров: Дорослі
                     PassengerSelector(
                         title = stringResource(R.string.label_adults),
-                        pricePerPerson = state.selectedRoute.adultPrice,
+                        pricePerPerson = state.getAdultPrice(),
                         selectedCount = state.adultCount,
                         onCountSelected = { onAction(FareCalculatorAction.OnAdultCountChanged(it)) },
                         maxCount = 5,
@@ -99,7 +131,7 @@ fun FareCalculatorContent(
                     // 3. Кол-во пассажиров: Діти
                     PassengerSelector(
                         title = stringResource(R.string.label_children),
-                        pricePerPerson = state.selectedRoute.childPrice,
+                        pricePerPerson = state.getChildPrice(),
                         selectedCount = state.childCount,
                         onCountSelected = { onAction(FareCalculatorAction.OnChildCountChanged(it)) },
                         maxCount = 5,
@@ -107,7 +139,7 @@ fun FareCalculatorContent(
                         buttonHeight = buttonHeight
                     )
 
-                    // 4. Шаблоны купюр
+                    // 4. Шаблоны купюр (16 блоков)
                     Text(
                         text = stringResource(R.string.preset_title),
                         style = MaterialTheme.typography.titleMedium,
@@ -158,7 +190,8 @@ fun FareCalculatorScreenCityPreview() {
             remainingToPay = 0,
             changeBreakdown = mapOf(50 to 1, 20 to 1, 10 to 1, 5 to 1)
         ),
-        onAction = {}
+        onAction = {},
+        onNavigateToSettings = {}
     )
 }
 
@@ -178,6 +211,7 @@ fun FareCalculatorScreenVillagePreview() {
             remainingToPay = 0,
             changeBreakdown = mapOf(50 to 1, 20 to 1, 2 to 1)
         ),
-        onAction = {}
+        onAction = {},
+        onNavigateToSettings = {}
     )
 }

@@ -35,7 +35,7 @@ fun PresetAmountGrid(
         modifier = modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(4.dp)
     ) {
-        presets.chunked(5).forEach { rowPresets ->
+        presets.chunked(4).forEach { rowPresets ->
             PresetRow(
                 rowPresets = rowPresets,
                 currentAmountPaid = currentAmountPaid,
@@ -95,7 +95,7 @@ private fun PresetRow(
                 )
             }
         }
-        repeat(5 - rowPresets.size) {
+        repeat(4 - rowPresets.size) {
             Spacer(modifier = Modifier.weight(1f))
         }
     }
@@ -106,7 +106,7 @@ private fun PresetRow(
 fun PresetAmountGridPreview() {
     MinibusFareCalculatorTheme {
         PresetAmountGrid(
-            presets = listOf(40, 50, 60, 70, 80, 90, 100, 120, 140, 150, 160, 200, 500, 1000, 2000),
+            presets = listOf(20, 40, 50, 60, 70, 80, 90, 100, 120, 140, 150, 160, 200, 500, 1000, 2000),
             currentAmountPaid = 100,
             onPresetSelected = {},
             modifier = Modifier.padding(12.dp)

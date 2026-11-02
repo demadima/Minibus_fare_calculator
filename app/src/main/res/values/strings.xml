@@ -22,4 +22,14 @@
     <string name="label_denominations">Купюри для решти:</string>
     <string name="currency_symbol">₴</string>
     <string name="denomination_item_format">%1$d ₴ × %2$d</string>
+
+    <string name="title_settings">Налаштування</string>
+    <string name="btn_back">Назад</string>
+    <string name="section_route_prices">Ціни квитків</string>
+    <string name="label_adults_price">Дорослі</string>
+    <string name="label_children_price">Діти</string>
+    <string name="section_presets_edit">Швидкий вибір купюри (16 блоків)</string>
+    <string name="hint_presets_edit">Вкажіть суми для 16 кнопок (грн):</string>
+    <string name="btn_save">Зберегти налаштування</string>
+    <string name="btn_reset_defaults">Скинути до заводських налаштувань</string>
 </resources>
