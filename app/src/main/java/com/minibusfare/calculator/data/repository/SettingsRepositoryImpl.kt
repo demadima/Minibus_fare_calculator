@@ -33,12 +33,13 @@ class SettingsRepositoryImpl(
     }
 
     override suspend fun saveFareSettings(settings: FareSettings) {
+        val sortedPresets = settings.presetAmounts.sorted()
         dataStoreManager.edit {
             setInteger(KEY_CITY_ADULT_PRICE, settings.cityAdultPrice)
             setInteger(KEY_CITY_CHILD_PRICE, settings.cityChildPrice)
             setInteger(KEY_VILLAGE_ADULT_PRICE, settings.villageAdultPrice)
             setInteger(KEY_VILLAGE_CHILD_PRICE, settings.villageChildPrice)
-            setString(KEY_PRESET_AMOUNTS, settings.presetAmounts.joinToString(","))
+            setString(KEY_PRESET_AMOUNTS, sortedPresets.joinToString(","))
         }
     }
 
@@ -50,11 +51,12 @@ class SettingsRepositoryImpl(
         val parsed = presetsStr.split(",")
             .mapNotNull { it.trim().toIntOrNull() }
             .take(16)
+            .sorted()
 
         return if (parsed.size == 16) {
             parsed
         } else {
-            FareSettings.DEFAULT_PRESETS
+            FareSettings.DEFAULT_PRESETS.sorted()
         }
     }
 }
