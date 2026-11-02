@@ -189,7 +189,7 @@ fun ChangeSummaryCard(
                         horizontalArrangement = Arrangement.spacedBy(6.dp),
                         verticalArrangement = Arrangement.spacedBy(6.dp)
                     ) {
-                        state.changeBreakdown.forEach { (denom, count) ->
+                        state.changeBreakdown.entries.sortedBy { it.key }.forEach { (denom, count) ->
                             Surface(
                                 shape = RoundedCornerShape(8.dp),
                                 color = MaterialTheme.colorScheme.surface,

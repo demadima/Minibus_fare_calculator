@@ -2,7 +2,7 @@
     <string name="app_name">Решта</string>
     <string name="route_city">По місту</string>
     <string name="route_village">До села</string>
-    <string name="route_price_format">Дор. %1$d ₴ | Дит. %2$d ₴</string>
+    <string name="route_price_format">Дит. %2$d ₴ | Дор. %1$d ₴</string>
     <string name="label_adults">Дорослі</string>
     <string name="label_children">Діти</string>
     <string name="passenger_count_format">%1$d ₴ (%2$d ос.)</string>
